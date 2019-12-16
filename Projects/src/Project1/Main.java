@@ -19,41 +19,41 @@ public class Main {
 		do {
 			Menu();
 			choice = scan.nextInt();
-			scan.hasNextLine();
-			switch(choice)
-			{
-			case 1: 
+			scan.nextLine();
+			if (choice == 1)
 				{
 				
 					System.out.println("Enter your Array as integers"
 							+ " followed by Commas");
-					int[] intArray = parseStringToIntArray(scan.nextLine());
+					String Array = scan.nextLine();
+					int[] intArray = parseStringToIntArray(Array);
+
 					runAlgs(intArray,"1234", false);
 					
 					
-			break;
 			}
-			case 2: 
+			else if (choice == 2)
 			{
 				System.out.println("Enter an Array Size");
 				int size = scan.nextInt();
-				System.out.println("Enter number(s) to run Solutions: \n1. Solution 1 \n2. Solution 2 \n3. Solution 3 \n4.Solution 4");
+				scan.nextLine();
+				System.out.println("Enter number(s) to run Solutions: \n1. Solution 1 \n2. Solution 2 \n3. Solution 3 \n4. Solution 4");
 				runAlgs(genRandomArray(size), scan.nextLine(), true);
 				
-				break;
 			}
-			case 3:
+			else if (choice == 3)
 			{
 				System.out.println("Enter an Array1 Size");
 				int size = scan.nextInt();
-				System.out.println("Enter an Arrar2 Size");
+				System.out.println("Enter an Array2 Size");
 				int size2 = scan.nextInt();
-				System.out.println("Enter number to run Solution: \n1. Solution 1 \n2. Solution 2 \n3. Solution 3 \n4.Solution 4");
+				System.out.println("Enter number to run Solution: \n1. Solution 1 \n2. Solution 2 \n3. Solution 3 \n4. Solution 4");
 				int solutionToRun = scan.nextInt();
 				predictRandomArray(size, size2, solutionToRun);
 				
 			}
-			}
+			
+			
 		}while(choice != 4);
 		scan.close();
 		System.out.println("System Closed!");
@@ -103,7 +103,7 @@ public class Main {
 		
 		//Base Case 2
 		if(l+1 == r) {
-			return Math.max(Math.max(A[l],A[r]),A[l]+A[r]);
+			return Math.max(A[l],Math.max(A[l] + A[r],A[r]));
 		}
 		
 		int  mid = (l + r)/2;
@@ -111,11 +111,11 @@ public class Main {
 		int mss_left = Alg3(A,l,mid);
 		
 		//Find the mSS that occurs in the right half of A
-		int mss_right = Alg3(A, mid+1, l);
+		int mss_right = Alg3(A, mid+1, r);
 		
 		//Find the MSS that intersects both the left and right halves
 		double mss_middle = mss_middle(A, l, mid, r);
-		return (int) Math.max(Math.max(mss_left,mss_right),mss_middle);
+		return (int) Math.max(mss_left,Math.max(mss_middle,mss_right));
 	}
 	
 	public static double mss_middle(int[] a,int left,int mid,int right)
@@ -168,7 +168,18 @@ public class Main {
 				+ "4. Quit \n");
 		}
 	
-	public static void prediction(double timelength, int size1, int size2, int toRun) {}
+	public static void prediction(int size2, int toRun) {
+		double runTime = 0;
+		if(toRun == 1) {runTime = Math.abs(5 * Math.pow(10, -8)* Math.pow(size2,3) - Math.pow(20, -5) * size2 * size2 - .0264 * size2) ;}
+		else if(toRun == 2) {runTime = Math.abs(2* Math.pow(10, -7) * size2 * size2 - 8 * Math.pow(10, -6) * size2);}
+		//Trendline significantly less than .95
+		else if(toRun == 3) {runTime = 0;}
+		//Trendline significantly less than .95
+		else { runTime = 0;}
+		String unitTime = (runTime >= 1000) ? "seconds" : "milliseconds";
+		if (runTime >= 1000) {runTime = runTime / 1000;}
+		System.out.printf("Prediction Time: %.2f %s\n", runTime , unitTime);
+	}
 	
 	/**
 	 * This function prints the MSS and Time of chosen algorithm and makes a prediction between 2 random arrays.
@@ -209,9 +220,10 @@ public class Main {
 				x = Alg4(A);
 				end = System.currentTimeMillis();
 				}
-			System.out.printf("MSS: %s\t%s", x, getStringTime(start,end));
+			System.out.printf("MSS of " + toRun + ": %s\t%s", x, getStringTime(start,end));
+			System.out.println();
 			if (i == 0) {
-				prediction(end - start, size1, size2, toRun);
+				prediction(size2, toRun);
 			}
 		}
 			
@@ -226,22 +238,22 @@ public class Main {
 	 */
 	public static void runAlgs(int[]A, String toRun, boolean printTime) {
 		if ( toRun.contains("1")) {
-			double start = System.currentTimeMillis();
+			double start = (double)System.currentTimeMillis();
 			int x = Alg1(A);
-			double end = System.currentTimeMillis();
+			double end = (double)System.currentTimeMillis();
 			String time = (printTime) ? getStringTime(start,end) : "";
 			
 			
-			System.out.printf("MSS: %s\t%s", x, time);
+			System.out.printf("MSS of Alg1: %s\t%s", x, time);
 		}
 		if (toRun.contains("2")) {
-			double start = System.currentTimeMillis();
+			double start =  System.currentTimeMillis();
 			int x = Alg2(A);
 			double end = System.currentTimeMillis();
 			String time = (printTime) ? getStringTime(start,end) : "";
 			
 			
-			System.out.printf("MSS: %s\t%s", x, time);
+			System.out.printf("MSS of Alg2: %s\t%s", x, time);
 		}
 		if (toRun.contains("3")) {
 			double start = System.currentTimeMillis();
@@ -250,7 +262,7 @@ public class Main {
 			String time = (printTime) ? getStringTime(start,end) : "";
 			
 			
-			System.out.printf("MSS: %s\t%s", x, time);
+			System.out.printf("MSS of Alg3: %s\t%s", x, time);
 		}
 		if (toRun.contains("4")) {
 			double start = System.currentTimeMillis();
@@ -259,8 +271,9 @@ public class Main {
 			String time = (printTime) ? getStringTime(start,end) : "";
 			
 			
-			System.out.printf("MSS: %s\t%s", x, time);
+			System.out.printf("MSS of Alg4: %s\t%s", x, time);
 		}
+		System.out.println();
 	}
 	
 	/**
@@ -271,10 +284,9 @@ public class Main {
 	 * @return timeString - a string that is formatted for printing the time
 	 */
 	public static String getStringTime(double start, double end) {
-		double timeLength = end - start;
-		timeLength = (timeLength >= 1000) ? (timeLength) / 1000 : timeLength;
-		
-		String timeString = "Time:" + Double.toString(timeLength).format("%f.02");
+		int timeLength = (int)(end - start);
+		double newTimeLength = (timeLength >= 1000) ? (timeLength) / 1000 : timeLength;
+		String timeString = "Time: " + Double.toString(newTimeLength);
 		timeString = (timeLength >= 1000) ? timeString + "seconds" : timeString + "miliseconds";
 		return timeString;
 	}
