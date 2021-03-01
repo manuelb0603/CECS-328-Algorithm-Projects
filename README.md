@@ -13,8 +13,13 @@ Project 2:
 EcProject: 
   Performs quicksort and radix sort operations.
   Executes 5 different operations of choice:
+  
     1. Find K-bit Binary representation of number.
+    
     2. Find Decimal Number of Binary input.
+    
     3. Calculate Running Time of RadixSort and QuickSort.
+    
     4. Generate Random Array and Find running time of RadixSort and QuickSort.
+    
     5. Quit.
